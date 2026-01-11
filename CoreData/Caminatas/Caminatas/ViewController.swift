@@ -84,7 +84,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         return caminatas.count
     }
-
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        guard let caminataEliminada = currentPerson?.misCaminatas?[indexPath.row] as? Caminata, editingStyle == .delete else {
+            return
+        }
+        context.delete(caminataEliminada)
+        
+        currentPerson?.removeFromMisCaminatas(caminataEliminada)
+        do {
+            try context.save()
+            caminataTableView.reloadData()
+        } catch let error as NSError {
+            print("Error \(error)")
+        }       
+    }
 
 }
 
